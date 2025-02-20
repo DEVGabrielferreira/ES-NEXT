@@ -19,7 +19,7 @@ const services = [
   },
 ];
 
-export function Vantagens() {
+export function Advantages() {
   const [emblaRef] = useEmblaCarousel({
     loop: false,
     align: "start",

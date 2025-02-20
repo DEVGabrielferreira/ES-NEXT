@@ -28,7 +28,7 @@ const testimonials = [
   },
 ];
 
-export function Alta() {
+export function Hype() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
   });

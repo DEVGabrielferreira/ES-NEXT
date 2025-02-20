@@ -1,25 +1,29 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import abel from "../../../../public/abel.jpg";
 import Image from "next/image";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export function Forms() {
+  const [artistsList, setArtistsList] = useState([]);
   const [search, setSearch] = useState("");
   const [artist, setArtist] = useState({});
   const [cachet, setCachet] = useState(0);
   const [date, setDate] = useState("");
   const [place, setPlace] = useState("");
   const [error, setError] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const inputRef = useRef(null);
+  const comboboxRef = useRef(null);
   const router = useRouter();
   const handleSearch = async () => {
     try {
       const token =
         "BQAF5Z5goBeyER9oIxY6h3DscVSTC4721YLuQUaDPz2RBB0HHB1dLXzhl_ffKh_gWB3seeKg6f3C7xN49DDeNpbcshTW8WmuGLNozsVqNo1qMC3kVdgyfubp9IhSuw4mAiNUuyyb7u4";
       const response = await fetch(
-        `https://api.spotify.com/v1/artists?name=${search}`,
+        `https://api.spotify.com/v1/search?q=${search}&type=artist`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -30,11 +34,18 @@ export function Forms() {
         throw new Error("Failed to fetch data");
       }
       const result = await response.json();
-      setArtist(result);
+      setArtistsList(result.artists.items);
     } catch (err) {
       setError(err.message);
     }
   };
+  const clearInput = () => {
+    setSearch("");
+    setArtistsList([]);
+    setIsOpen(false);
+    inputRef.current?.focus();
+  };
+
   function save() {
     const savedEvents = localStorage.getItem("events");
     const formatedEvents = JSON.parse(savedEvents) || [];
@@ -68,21 +79,55 @@ export function Forms() {
           Formulário de Contratação
         </h1>
 
-        <div className="mb-6 flex justify-center text-black">
-          <input
-            className="w-full md:w-1/2 p-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            type="text"
-            placeholder="Pesquisar artista..."
-            onChange={(e) => setSearch(e.target.value)}
-            value={search}
-          />
-          <button
-            onClick={handleSearch}
-            type="button"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 ml-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Pesquisar
-          </button>
+        <div className="relative w-80" ref={comboboxRef}>
+          <div className="flex">
+            <div className="relative flex-grow">
+              <input
+                ref={inputRef}
+                type="text"
+                className="w-full px-4 py-2 text-sm border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Pesquisar por artista..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onFocus={() => setIsOpen(false)}
+              />
+              {search && (
+                <button
+                  onClick={clearInput}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+                >
+                  <X size={18} />
+                </button>
+              )}
+            </div>
+            <button
+              onClick={handleSearch}
+              className="px-4 py-2 text-sm text-white bg-blue-500 rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              pesquisar
+            </button>
+          </div>
+          {isOpen && (
+            <ul className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-60 overflow-auto">
+              {artistsList.map((artist, index) => (
+                <li
+                  key={index}
+                  className="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                  onClick={() => {
+                    setSearch(artist);
+                    setIsOpen(false);
+                  }}
+                >
+                  {artist.name}
+                </li>
+              ))}
+              {artistsList.length === 0 && (
+                <li className="px-4 py-2 text-sm text-gray-500">
+                  Nenhum artista encontrado.
+                </li>
+              )}
+            </ul>
+          )}
         </div>
 
         <Link
