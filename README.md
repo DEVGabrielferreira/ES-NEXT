@@ -17,7 +17,7 @@ Este projeto consiste em uma aplicação web desenvolvida para atender à demand
 
 ## -H 'Content-Type: application/x-www-form-urlencoded' \
 
-## -d"grant_type=client_credentials&client_id=7430e246c1c84ed9b90aa6d254d10e3a&client_secret=6828d838deaf430a9e93074de885e64b" \
+##  -d"grant_type=client_credentials&client_id=7430e246c1c84ed9b90aa6d254d10e3a&client_secret=6828d838deaf430a9e93074de885e64b" \
 
 ## https://accounts.spotify.com/api/token
 
