@@ -9,7 +9,7 @@ import Link from "next/link";
 export function Forms() {
   const [artistsList, setArtistsList] = useState([]);
   const [search, setSearch] = useState("");
-  const [artist, setArtist] = useState({});
+  const [artist, setArtist] = useState(null);
   const [cachet, setCachet] = useState(0);
   const [date, setDate] = useState("");
   const [place, setPlace] = useState("");
@@ -21,7 +21,7 @@ export function Forms() {
   const handleSearch = async () => {
     try {
       const token =
-        "BQAF5Z5goBeyER9oIxY6h3DscVSTC4721YLuQUaDPz2RBB0HHB1dLXzhl_ffKh_gWB3seeKg6f3C7xN49DDeNpbcshTW8WmuGLNozsVqNo1qMC3kVdgyfubp9IhSuw4mAiNUuyyb7u4";
+        "BQAzuodIJLHTJnewlmVpEqvUOmwiP28gT2fGPU_aWUEH90C2ulQ9n9A3grVrfkCVJHadn1b1pCzzS1mCHVNVRO6f-yryBcCcIzTQ75pdkeBecUAYFf3--2IaxBhF5LnJXtSnvV1xJBE";
       const response = await fetch(
         `https://api.spotify.com/v1/search?q=${search}&type=artist`,
         {
@@ -35,6 +35,7 @@ export function Forms() {
       }
       const result = await response.json();
       setArtistsList(result.artists.items);
+      setIsOpen(true);
     } catch (err) {
       setError(err.message);
     }
@@ -49,6 +50,10 @@ export function Forms() {
   function save() {
     const savedEvents = localStorage.getItem("events");
     const formatedEvents = JSON.parse(savedEvents) || [];
+    if (artist == null) {
+      setError("Selecione um Artista");
+      return;
+    }
     if (cachet <= 0) {
       setError("Cache invalido");
       return;
@@ -63,6 +68,7 @@ export function Forms() {
     }
 
     const formData = {
+      artist: artist,
       cachet: cachet,
       date: date,
       place: place,
@@ -72,74 +78,75 @@ export function Forms() {
     router.push("/conclusion");
   }
   return (
-    <div className="min-h-screen bg-sky-800 text-white">
+    <div className="min-h-screen bg-sky-800 text-black">
       <div className="container mx-auto p-4">
-        {artist && <pre>{JSON.stringify(artist)}</pre>}
         <h1 className="text-3xl font-bold text-center mb-6">
           Formulário de Contratação
         </h1>
-
-        <div className="relative w-80" ref={comboboxRef}>
-          <div className="flex">
-            <div className="relative flex-grow">
-              <input
-                ref={inputRef}
-                type="text"
-                className="w-full px-4 py-2 text-sm border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Pesquisar por artista..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                onFocus={() => setIsOpen(false)}
-              />
-              {search && (
-                <button
-                  onClick={clearInput}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
-                >
-                  <X size={18} />
-                </button>
-              )}
+        <div className="justify-between flex items-center gap-2 mb-2">
+          <Link
+            href="/"
+            className="bg-sky-300 px-5 py-2 mb-3 rounded-md font-semibold flex items-center justify-center w-fit"
+          >
+            {" "}
+            Página Inicial{" "}
+          </Link>
+          <div className="relative w-80" ref={comboboxRef}>
+            <div className="flex">
+              <div className="relative flex-grow">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  className="w-full px-4 py-2 text-sm border rounded-l-md mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Pesquisar por artista..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  onFocus={() => setIsOpen(false)}
+                />
+                {search && (
+                  <button
+                    onClick={clearInput}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+                  >
+                    <X size={18} />
+                  </button>
+                )}
+              </div>
+              <button
+                onClick={handleSearch}
+                disabled={search == ""}
+                className="px-4 py-2 text-sm text-white bg-blue-500 mb-2 rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                Procurar
+              </button>
             </div>
-            <button
-              onClick={handleSearch}
-              className="px-4 py-2 text-sm text-white bg-blue-500 rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              pesquisar
-            </button>
+
+            {isOpen && (
+              <ul className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-60 overflow-auto">
+                {artistsList.map((artist, index) => (
+                  <li
+                    key={index}
+                    className="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                    onClick={() => {
+                      setArtist(artist);
+                      setIsOpen(false);
+                    }}
+                  >
+                    {artist.name}
+                  </li>
+                ))}
+                {artistsList.length === 0 && (
+                  <li className="px-4 py-2 text-sm text-gray-500">
+                    Nenhum artista encontrado.
+                  </li>
+                )}
+              </ul>
+            )}
           </div>
-          {isOpen && (
-            <ul className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-60 overflow-auto">
-              {artistsList.map((artist, index) => (
-                <li
-                  key={index}
-                  className="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-                  onClick={() => {
-                    setSearch(artist);
-                    setIsOpen(false);
-                  }}
-                >
-                  {artist.name}
-                </li>
-              ))}
-              {artistsList.length === 0 && (
-                <li className="px-4 py-2 text-sm text-gray-500">
-                  Nenhum artista encontrado.
-                </li>
-              )}
-            </ul>
-          )}
         </div>
 
-        <Link
-          href="/"
-          className="bg-sky-300 px-5 py-2 mb-3 rounded-md font-semibold flex items-center justify-center w-fit"
-        >
-          {" "}
-          Página Inicial{" "}
-        </Link>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-[#1e293b] p-6 rounded-lg shadow-lg">
+          <div className="text-white p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-semibold mb-4">
               Preencha os detalhes para contratar o Artista
             </h2>
@@ -209,43 +216,57 @@ export function Forms() {
               </div>
             </form>
           </div>
-          <div className="bg-[#1e293b] p-6 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-semibold mb-4">The Weeknd</h2>
+          {artist ? (
+            <div className="bg-[#1e293b] p-6 rounded-lg shadow-lg">
+              <h2 className="text-2xl text-white font-semibold mb-4">
+                {artist.name}
+              </h2>
+              <Link
+                href={artist.external_urls.spotify}
+                target="_blank"
+                className="text-green-500 font-semibold mb-2 block hover:underline"
+              >
+                Perfil Spotify
+              </Link>
+              <div className="mb-4">
+                <div className="w-full h-60 flex items-center justify-center overflow-hidden rounded-lg">
+                  <img
+                    src={artist.images[0].url}
+                    alt={artist.name}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+              </div>
 
-            <div className="mb-4">
-              <div className="w-full h-48 bg-[#1e293b] rounded-lg flex items-center justify-center text-gray-500">
-                <Image
-                  src={abel}
-                  alt="Abel"
-                  className="object-contain"
-                  width={300}
-                  height={300}
-                  quality={100}
-                  priority
-                />
+              <p className="text-white mb-4">Informações do Artista</p>
+
+              <ul className="list-disc list-inside text-white">
+                <li>Seguidores: {artist.followers.total}</li>
+                <li className="text-white mb-4">
+                  Popularidade: {artist.popularity}
+                </li>
+                <li>
+                  Gênero:
+                  <div className="flex flex-wrap gap-3 mt-1">
+                    {artist.genres.map((genre, index) => (
+                      <span
+                        key={index}
+                        className="bg-gray-700 text-white px-2 py-1 rounded-md"
+                      >
+                        {genre}
+                      </span>
+                    ))}
+                  </div>
+                </li>
+              </ul>
+            </div>
+          ) : (
+            <div className="bg-[#1e293b] p-6 rounded-lg shadow-lg ">
+              <div className="flex items-center justify-center text-white">
+                Por favor, selecione um artista
               </div>
             </div>
-
-            <p className="text-white mb-4">Informações do Artista</p>
-
-            <p className="text-white-600 mb-4">
-              The Weeknd, nome artístico de Abel Makkonen Tesfaye, é um cantor,
-              compositor e produtor musical canadense. Conhecido por sua voz
-              distintiva e produções atmosféricas, ele se tornou um dos artistas
-              mais influentes da música pop e R&B contemporânea.
-            </p>
-            <ul className="list-disc list-inside text-white">
-              <li>Gêneros: R&B, Pop, Synth-pop</li>
-              <li>
-                Álbuns notáveis: "After Hours", "Starboy", "Beauty Behind the
-                Madness"
-              </li>
-              <li>
-                Prêmios: Múltiplos Grammy Awards, Billboard Music Awards, e
-                American Music Awards
-              </li>
-            </ul>
-          </div>
+          )}
         </div>
       </div>
     </div>

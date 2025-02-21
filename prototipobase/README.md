@@ -1,36 +1,24 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ES-NEXT
 
-## Getting Started
+## Descrição do Projeto
 
-First, run the development server:
+Este projeto consiste em uma aplicação web desenvolvida para atender à demanda do cliente ES por uma plataforma online para a contratação de artistas para shows particulares. A aplicação oferece uma interface intuitiva e funcional, permitindo aos usuários encontrar e contratar seus artistas favoritos de forma rápida e eficiente.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Como começar
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#Clonar repositório: https://github.com/DEVGabrielferreira/ES-NEXT
+#Ir para a pasta prototipobase
+#Npm install
+#Npm run dev
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Para gerar um token de acesso da API do Spotify, cole os seguintes comandos no terminal:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## curl -X POST \
 
-## Learn More
+## -H 'Content-Type: application/x-www-form-urlencoded' \
 
-To learn more about Next.js, take a look at the following resources:
+## -d "grant_type=client_credentials&client_id=7430e246c1c84ed9b90aa6d254d10e3a&client_secret=6828d838deaf430a9e93074de885e64b" \
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## https://accounts.spotify.com/api/token
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## colar o token de autorização dentro do forms.js que está no endereço prototipobase/src/app/forms/\_components na linha 24
