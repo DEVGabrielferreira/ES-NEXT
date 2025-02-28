@@ -53,32 +53,29 @@ export function About() {
 
             <ul className="space-y-4">
               <li className="flex items-center gap-2">
-                <Check className="text-blue-500" />{" "}
-                {/* Cor alterada para azul */}
-                Atuando no mercado desde 2006.
+                <Check className="text-blue-500" /> Atuando no mercado desde
+                2006.
               </li>
               <li className="flex items-center gap-2">
-                <Check className="text-blue-500" />{" "}
-                {/* Cor alterada para azul */}
-                Equipe especializada em produção de eventos.
+                <Check className="text-blue-500" /> Equipe especializada em
+                produção de eventos.
               </li>
               <li className="flex items-center gap-2">
-                <Check className="text-blue-500" />{" "}
-                {/* Cor alterada para azul */}
-                Qualidade e profissionalismo são nossas prioridades.
+                <Check className="text-blue-500" /> Qualidade e profissionalismo
+                são nossas prioridades.
               </li>
             </ul>
 
             <div className="flex gap-2">
               <a
-                href="#contato" // Link para a seção de contato
+                href="#contato"
                 className="bg-blue-500 text-white flex items-center justify-center w-fit gap-2 px-4 py-2 rounded-md"
               >
                 Entre em contato
               </a>
 
               <a
-                href="#endereco" // Link para a seção de endereço
+                href="#endereco"
                 className="flex items-center justify-center w-fit gap-2 px-4 py-2 rounded-md border border-blue-500 text-blue-500"
               >
                 <MapPin className="w-5 h-5" />

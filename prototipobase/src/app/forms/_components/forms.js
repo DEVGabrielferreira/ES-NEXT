@@ -20,19 +20,28 @@ export function Forms() {
   const router = useRouter();
   const handleSearch = async () => {
     try {
-      const token =
-        "BQAzuodIJLHTJnewlmVpEqvUOmwiP28gT2fGPU_aWUEH90C2ulQ9n9A3grVrfkCVJHadn1b1pCzzS1mCHVNVRO6f-yryBcCcIzTQ75pdkeBecUAYFf3--2IaxBhF5LnJXtSnvV1xJBE";
+      const tokenResponse = await fetch("/api/spotify-token");
+      const tokenData = await tokenResponse.json();
+      if (!tokenResponse.ok) {
+        throw new Error(tokenData.error || "Erro ao obter o token");
+      }
+      const token = tokenData.token;
+
       const response = await fetch(
-        `https://api.spotify.com/v1/search?q=${search}&type=artist`,
+        `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+          search
+        )}&type=artist`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+
       if (!response.ok) {
-        throw new Error("Failed to fetch data");
+        throw new Error("Falha ao buscar os dados dos artistas");
       }
+
       const result = await response.json();
       setArtistsList(result.artists.items);
       setIsOpen(true);
