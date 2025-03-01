@@ -15,9 +15,17 @@ export function Forms() {
   const [place, setPlace] = useState("");
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+
+  const [cep, setCep] = useState("");
+  const [viaCepError, setViaCepError] = useState("");
+  const [logradouro, setLogradouro] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [estado, setEstado] = useState("");
+
   const inputRef = useRef(null);
   const comboboxRef = useRef(null);
   const router = useRouter();
+
   const handleSearch = async () => {
     try {
       const tokenResponse = await fetch("/api/spotify-token");
@@ -49,11 +57,46 @@ export function Forms() {
       setError(err.message);
     }
   };
+
   const clearInput = () => {
     setSearch("");
     setArtistsList([]);
     setIsOpen(false);
     inputRef.current?.focus();
+  };
+
+  const fetchAddress = async (cepValue) => {
+    if (cepValue.length === 8) {
+      try {
+        const response = await fetch(
+          `https://viacep.com.br/ws/${cepValue}/json/`
+        );
+        const data = await response.json();
+        if (data.erro) {
+          setViaCepError("CEP inválido. Verifique e tente novamente.");
+          setLogradouro("");
+          setCidade("");
+          setEstado("");
+          setPlace("");
+        } else {
+          setViaCepError("");
+          setLogradouro(data.logradouro || "");
+          setCidade(data.localidade || "");
+          setEstado(data.uf || "");
+          setPlace(`${data.logradouro}, ${data.localidade} - ${data.uf}`);
+        }
+      } catch (error) {
+        setViaCepError("Erro ao buscar CEP. Tente novamente.");
+      }
+    }
+  };
+
+  const handleCepChange = (e) => {
+    const cepValue = e.target.value.replace(/\D/g, "");
+    setCep(cepValue);
+    if (cepValue.length === 8) {
+      fetchAddress(cepValue);
+    }
   };
 
   function save() {
@@ -64,14 +107,14 @@ export function Forms() {
       return;
     }
     if (cachet <= 0) {
-      setError("Cache invalido");
+      setError("Cache inválido");
       return;
     }
-    if (date == "") {
+    if (date === "") {
       setError("Escolha uma Data");
       return;
     }
-    if (place == "") {
+    if (place === "") {
       setError("Selecione um local");
       return;
     }
@@ -86,6 +129,7 @@ export function Forms() {
     localStorage.setItem("events", JSON.stringify(newEvent));
     router.push("/conclusion");
   }
+
   return (
     <div className="min-h-screen bg-sky-800 text-black">
       <div className="container mx-auto p-4">
@@ -97,8 +141,7 @@ export function Forms() {
             href="/"
             className="bg-sky-300 px-5 py-2 mb-3 rounded-md font-semibold flex items-center justify-center w-fit"
           >
-            {" "}
-            Página Inicial{" "}
+            Página Inicial
           </Link>
           <div className="relative w-80" ref={comboboxRef}>
             <div className="flex">
@@ -123,13 +166,12 @@ export function Forms() {
               </div>
               <button
                 onClick={handleSearch}
-                disabled={search == ""}
+                disabled={search === ""}
                 className="px-4 py-2 text-sm text-white bg-blue-500 mb-2 rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 Procurar
               </button>
             </div>
-
             {isOpen && (
               <ul className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-60 overflow-auto">
                 {artistsList.map((artist, index) => (
@@ -163,6 +205,43 @@ export function Forms() {
               <div className="mb-4">
                 <label
                   className="block text-white text-sm font-bold mb-2"
+                  htmlFor="cep"
+                >
+                  CEP <span className="text-red-600">*</span>
+                </label>
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
+                  id="cep"
+                  type="text"
+                  placeholder="Digite o CEP"
+                  value={cep}
+                  onChange={handleCepChange}
+                  maxLength={8}
+                />
+                {viaCepError && (
+                  <p className="text-red-600 text-sm">{viaCepError}</p>
+                )}
+              </div>
+              <div className="mb-4">
+                <label
+                  className="block text-white text-sm font-bold mb-2"
+                  htmlFor="location"
+                >
+                  Local do evento <span className="text-red-600">*</span>
+                </label>
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
+                  id="location"
+                  type="text"
+                  placeholder="Endereço completo"
+                  onChange={(e) => setPlace(e.target.value)}
+                  value={place}
+                  readOnly
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  className="block text-white text-sm font-bold mb-2"
                   htmlFor="cache"
                 >
                   Cachê <span className="text-red-600">*</span>
@@ -192,22 +271,6 @@ export function Forms() {
                   value={date}
                 />
               </div>
-              <div className="mb-4">
-                <label
-                  className="block text-white text-sm font-bold mb-2"
-                  htmlFor="location"
-                >
-                  Local do evento <span className="text-red-600">*</span>
-                </label>
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
-                  id="location"
-                  type="text"
-                  placeholder="Cidade do evento"
-                  onChange={(e) => setPlace(e.target.value)}
-                  value={place}
-                />
-              </div>
               <div className="flex items-center justify-between">
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -216,7 +279,6 @@ export function Forms() {
                 >
                   Enviar
                 </button>
-
                 {error && (
                   <div className="p-4 bg-red-600">
                     <p className="text-white font-bold">{error}</p>
@@ -246,9 +308,7 @@ export function Forms() {
                   />
                 </div>
               </div>
-
               <p className="text-white mb-4">Informações do Artista</p>
-
               <ul className="list-disc list-inside text-white">
                 <li>Seguidores: {artist.followers.total}</li>
                 <li className="text-white mb-4">
