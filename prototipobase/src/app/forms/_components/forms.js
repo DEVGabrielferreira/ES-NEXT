@@ -1,7 +1,5 @@
 "use client";
 import { useRef, useState } from "react";
-import abel from "../../../../public/abel.jpg";
-import Image from "next/image";
 import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -99,9 +97,7 @@ export function Forms() {
     }
   };
 
-  function save() {
-    const savedEvents = localStorage.getItem("events");
-    const formatedEvents = JSON.parse(savedEvents) || [];
+  async function save() {
     if (artist == null) {
       setError("Selecione um Artista");
       return;
@@ -120,14 +116,32 @@ export function Forms() {
     }
 
     const formData = {
-      artist: artist,
-      cachet: cachet,
-      date: date,
-      place: place,
+      artist: artist.name,
+      cache: cachet,
+      data: date,
+      local: place,
     };
-    const newEvent = [...formatedEvents, formData];
-    localStorage.setItem("events", JSON.stringify(newEvent));
-    router.push("/conclusion");
+
+    try {
+      const response = await fetch("http://localhost:8989/api/events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Erro ao salvar o evento");
+      }
+
+      const result = await response.json();
+      console.log("Evento salvo com sucesso:", result);
+      router.push("/conclusion");
+    } catch (err) {
+      setError(err.message);
+    }
   }
 
   return (

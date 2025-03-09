@@ -1,0 +1,32 @@
+# Laravel
+/vendor/
+/node_modules/
+/public/storage
+/storage/*.key
+.env
+.phpunit.result.cache
+Homestead.yaml
+Homestead.json
+.idea
+*.sublime-workspace
+*.sublime-project
+*.log
+
+# NPM
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# IDEs 
+.vscode/
+.idea/
+*.iml
+
+# React/Next.js build folders
+.next/
+/build/
+out/
+
+# System files
+.DS_Store
+Thumbs.db
