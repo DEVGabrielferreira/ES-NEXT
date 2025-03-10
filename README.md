@@ -1,24 +1,120 @@
-# ES-NEXT
+# Projeto Laravel 11.x
 
-## Descrição do Projeto
+Este projeto é um exemplo de aplicação Laravel 11.x configurada para rodar em Docker.
 
-Este projeto consiste em uma aplicação web desenvolvida para atender à demanda do cliente ES por uma plataforma online para a contratação de artistas para shows particulares. A aplicação oferece uma interface intuitiva e funcional, permitindo aos usuários encontrar e contratar seus artistas favoritos de forma rápida e eficiente.
+## Passo a passo para rodar o projeto
 
-## Como começar
+1.  **Clone o projeto:**
 
-#Clonar repositório: https://github.com/DEVGabrielferreira/ES-NEXT
-#Ir para a pasta prototipobase
-#Npm install
-#Npm run dev
+    ```bash
+    git clone [https://github.com/DEVGabrielferreira/ES-NEXT](https://github.com/DEVGabrielferreira/ES-NEXT) laravel-11-esnext
+    ```
 
-## Para gerar um token de acesso da API do Spotify, cole os seguintes comandos no terminal:
+    ```bash
+    cd laravel-11-esnext/
+    ```
 
-## curl -X POST \
+2.  **Crie o arquivo `.env`:**
 
-## -H 'Content-Type: application/x-www-form-urlencoded' \
+    ```bash
+    cp .env.example .env
+    ```
 
-##  -d"grant_type=client_credentials&client_id=7430e246c1c84ed9b90aa6d254d10e3a&client_secret=6828d838deaf430a9e93074de885e64b" \
+3.  **Atualize as variáveis de ambiente no arquivo `.env`:**
 
-## https://accounts.spotify.com/api/token
+    ```ini
+    APP_NAME=Laravel
+    APP_ENV=local
+    APP_KEY=base64:FaOT/+gOE48KhoX6WOsUUE++ixTk6v7IJjKxQ34nutY=
+    APP_DEBUG=true
+    APP_URL=http://localhost:9000
 
-## colar o token de autorização dentro do forms.js que está no endereço prototipobase/src/app/forms/\_components na linha 24
+    LOG_CHANNEL=stack
+    LOG_LEVEL=debug
+
+    DB_CONNECTION=mysql
+    DB_HOST=db
+    DB_PORT=3306
+    DB_DATABASE=laravel_db
+    DB_USERNAME=root
+    DB_PASSWORD=password
+
+    BROADCAST_DRIVER=log
+    CACHE_DRIVER=file
+    FILESYSTEM_DISK=local
+    QUEUE_CONNECTION=sync
+    SESSION_DRIVER=file
+    SESSION_LIFETIME=120
+
+    MEMCACHED_HOST=127.0.0.1
+
+    REDIS_HOST=127.0.0.1
+    REDIS_PASSWORD=null
+    REDIS_PORT=6379
+
+    MAIL_MAILER=smtp
+    MAIL_HOST=mailpit
+    MAIL_PORT=1025
+    MAIL_USERNAME=null
+    MAIL_PASSWORD=null
+    MAIL_ENCRYPTION=null
+    MAIL_FROM_ADDRESS="noreply@example.com"
+    MAIL_FROM_NAME="${APP_NAME}"
+
+    AWS_ACCESS_KEY_ID=
+    AWS_SECRET_ACCESS_KEY=
+    AWS_DEFAULT_REGION=us-east-1
+    AWS_BUCKET=
+
+    PUSHER_APP_ID=
+    PUSHER_APP_KEY=
+    PUSHER_APP_SECRET=
+    PUSHER_HOST=
+    PUSHER_PORT=443
+    PUSHER_SCHEME=https
+    PUSHER_APP_CLUSTER=mt1
+
+    MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+    MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+
+    PMA_HOST=db
+    PMA_PORT=3306
+    ```
+
+4.  **Suba os containers do projeto (usando Docker Compose):**
+
+    ```bash
+    docker-compose up -d
+    ```
+
+5.  **Acesse o container da aplicação:**
+
+    ```bash
+    docker-compose exec app bash
+    ```
+
+6.  **Instale as dependências do projeto:**
+
+    ```bash
+    composer install
+    ```
+
+7.  **Gere a chave do projeto Laravel:**
+
+    ```bash
+    php artisan key:generate
+    ```
+
+8.  **Acesse o projeto:**
+
+    ```
+    http://localhost:9000
+    ```
+
+## Observações
+
+- Certifique-se de ter o Docker e Docker Compose instalados em sua máquina.
+- O `mailpit` está configurado para o envio de emails. Acesse `http://localhost:1025` para visualizar os emails enviados.
+- O `PMA_HOST` e `PMA_PORT` estão configurados para acessar o phpMyAdmin, caso esteja configurado no seu docker-compose.
+- A chave `APP_KEY` já está preenchida no seu .env, caso precise gerar uma nova use o comando `php artisan key:generate`.
+- Caso você precise executar as migrations, use o comando `php artisan migrate` dentro do container app.
