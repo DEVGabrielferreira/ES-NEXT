@@ -8,11 +8,6 @@ return [
     |--------------------------------------------------------------------------
     | Default Database Connection Name
     |--------------------------------------------------------------------------
-    |
-    | Aqui você pode definir a conexão padrão para a aplicação. O valor padrão
-    | é obtido da variável de ambiente DB_CONNECTION, e se não estiver definido,
-    | usa 'mysql'.
-    |
     */
 
     'default' => env('DB_CONNECTION', 'mysql'),
@@ -21,9 +16,6 @@ return [
     |--------------------------------------------------------------------------
     | Database Connections
     |--------------------------------------------------------------------------
-    |
-    | Aqui são definidas as conexões de banco de dados para a aplicação. A seguir,
-    | você tem as configurações para SQLite, MySQL, PostgreSQL e SQL Server.
     |
     */
 
@@ -92,7 +84,6 @@ return [
     | Migration Repository Table
     |--------------------------------------------------------------------------
     |
-    | Essa tabela controla quais migrações já foram executadas na aplicação.
     |
     */
 
@@ -103,7 +94,6 @@ return [
     | Redis Databases
     |--------------------------------------------------------------------------
     |
-    | Aqui você pode configurar o Redis para a aplicação.
     |
     */
 

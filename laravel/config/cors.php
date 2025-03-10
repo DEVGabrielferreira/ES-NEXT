@@ -5,20 +5,15 @@ return [
      |--------------------------------------------------------------------------
      | Laravel CORS Options
      |--------------------------------------------------------------------------
-     |
-     | Here you may configure your settings for handling CORS (Cross-Origin
-     | Resource Sharing). This configuration controls how your application
-     | responds to cross-origin requests from different domains.
-     |
      */
 
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*'], // Permitir todos os métodos HTTP
+    'allowed_methods' => ['*'], 
 
-    'allowed_origins' => ['*'], // Permitir todos os domínios (ou seja, qualquer frontend)
+    'allowed_origins' => ['*'], 
 
-    'allowed_headers' => ['*'], // Permitir todos os cabeçalhos
+    'allowed_headers' => ['*'],
 
     'exposed_headers' => [],
 
