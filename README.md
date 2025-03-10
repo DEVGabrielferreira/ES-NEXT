@@ -1,17 +1,17 @@
-# Projeto Laravel 11.x
+# Projeto ES-NEXT
 
-Este projeto é um exemplo de aplicação Laravel 11.x configurada para rodar em Docker.
+Projeto Fullstack com Laravel, Docker e Next.Js
 
 ## Passo a passo para rodar o projeto
 
 1.  **Clone o projeto:**
 
     ```bash
-    git clone [https://github.com/DEVGabrielferreira/ES-NEXT](https://github.com/DEVGabrielferreira/ES-NEXT) laravel-11-esnext
+    git clone [https://github.com/DEVGabrielferreira/ES-NEXT](https://github.com/DEVGabrielferreira/ES-NEXT) laravel-esnext
     ```
 
     ```bash
-    cd laravel-11-esnext/
+    cd laravel-esnext/
     ```
 
 2.  **Crie o arquivo `.env`:**
@@ -99,7 +99,7 @@ Este projeto é um exemplo de aplicação Laravel 11.x configurada para rodar em
     composer install
     ```
 
-7.  **Gere a chave do projeto Laravel:**
+7.  **Gere a chave do projeto:**
 
     ```bash
     php artisan key:generate
@@ -113,8 +113,7 @@ Este projeto é um exemplo de aplicação Laravel 11.x configurada para rodar em
 
 ## Observações
 
-- Certifique-se de ter o Docker e Docker Compose instalados em sua máquina.
-- O `mailpit` está configurado para o envio de emails. Acesse `http://localhost:1025` para visualizar os emails enviados.
-- O `PMA_HOST` e `PMA_PORT` estão configurados para acessar o phpMyAdmin, caso esteja configurado no seu docker-compose.
-- A chave `APP_KEY` já está preenchida no seu .env, caso precise gerar uma nova use o comando `php artisan key:generate`.
-- Caso você precise executar as migrations, use o comando `php artisan migrate` dentro do container app.
+- Certifique-se de ter o Docker e Docker Compose instalados.
+- O `PMA_HOST` e `PMA_PORT` são para phpMyAdmin, se configurado.
+- A chave `APP_KEY` já está no `.env`.
+- Para migrações, use `php artisan migrate`.
